@@ -1,4 +1,4 @@
-# Project Navi - Mobile-First E-commerce Platform
+# Keerthi's Store - Mobile-First E-commerce Platform
 
 Production-ready full-stack e-commerce application with clear separation of:
 - Frontend (`frontend`) - React + Vite + Tailwind CSS
