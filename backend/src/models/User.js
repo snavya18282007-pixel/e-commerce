@@ -6,7 +6,17 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['admin', 'customer'], default: 'customer' }
+    role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
+    shippingAddress: {
+      doorNo: { type: String, default: '' },
+      streetAddress: { type: String, default: '' },
+      city: { type: String, default: '' },
+      state: { type: String, default: 'Tamil Nadu' },
+      zip: { type: String, default: '' },
+      phone: { type: String, default: '' },
+      altPhone: { type: String, default: '' },
+      country: { type: String, default: 'India' }
+    }
   },
   { timestamps: true }
 );

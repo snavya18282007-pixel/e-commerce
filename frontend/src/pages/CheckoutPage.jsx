@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../services/api';
 import { useCartStore } from '../store/cartStore';
@@ -6,29 +6,55 @@ import { useUserStore } from '../store/userStore';
 
 const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCartStore((state) => state);
-  const user = useUserStore((state) => state.user);
+  const { user, token } = useUserStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, [token, navigate]);
+
   const [shipping, setShipping] = useState({
-    fullName: '',
-    doorNo: '',
-    streetAddress: '',
-    city: '',
-    state: 'Tamil Nadu',
-    zip: '',
-    phone: '',
-    altPhone: '',
-    email: '',
-    country: 'India'
+    fullName: user?.name || '',
+    doorNo: user?.shippingAddress?.doorNo || '',
+    streetAddress: user?.shippingAddress?.streetAddress || '',
+    city: user?.shippingAddress?.city || '',
+    state: user?.shippingAddress?.state || 'Tamil Nadu',
+    zip: user?.shippingAddress?.zip || '',
+    phone: user?.shippingAddress?.phone || '',
+    altPhone: user?.shippingAddress?.altPhone || '',
+    email: user?.email || '',
+    country: user?.shippingAddress?.country || 'India'
   });
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+
+  useEffect(() => {
+    if (user) {
+      setShipping((prev) => ({
+        ...prev,
+        fullName: user.name || prev.fullName,
+        email: user.email || prev.email,
+        doorNo: user.shippingAddress?.doorNo || prev.doorNo,
+        streetAddress: user.shippingAddress?.streetAddress || prev.streetAddress,
+        city: user.shippingAddress?.city || prev.city,
+        state: user.shippingAddress?.state || prev.state,
+        zip: user.shippingAddress?.zip || prev.zip,
+        phone: user.shippingAddress?.phone || prev.phone,
+        altPhone: user.shippingAddress?.altPhone || prev.altPhone,
+        country: user.shippingAddress?.country || prev.country
+      }));
+    }
+  }, [user]);
+
+  const [paymentMethod, setPaymentMethod] = useState('upi');
   const [upiTxnId, setUpiTxnId] = useState('');
   const [showUpiModal, setShowUpiModal] = useState(false);
   const [pendingPayload, setPendingPayload] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const navigate = useNavigate();
   const subtotal = useMemo(() => totalPrice(), [items, totalPrice]);
   const shippingCharge = items.length ? 50 : 0;
   const total = subtotal + shippingCharge;
-  const upiId = import.meta.env.VITE_UPI_ID || 'keerthisgiftshop@upi';
+  const upiId = import.meta.env.VITE_UPI_ID || 'jackulin18439-4@okicici';
   const payeeName = "Keerthi's Gift Shop";
   const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(
     payeeName
@@ -205,7 +231,6 @@ const CheckoutPage = () => {
             onChange={(e) => setPaymentMethod(e.target.value)}
             className="w-full border border-zinc-300 px-3 py-2 text-sm"
           >
-            <option value="cod">Cash on Delivery</option>
             <option value="upi">UPI (Free Online Payment)</option>
           </select>
         </div>
@@ -288,8 +313,6 @@ const CheckoutPage = () => {
               <div className="grid gap-4 md:grid-cols-[0.6fr_1fr]">
                 <div className="space-y-2 text-sm">
                   <p className="font-medium text-zinc-800">UPI</p>
-                  <p className="text-zinc-500">Cards</p>
-                  <p className="text-zinc-500">Netbanking</p>
                 </div>
                 <div className="rounded border border-zinc-200 p-3">
                   <p className="mb-2 text-xs font-semibold uppercase text-zinc-600">UPI QR</p>

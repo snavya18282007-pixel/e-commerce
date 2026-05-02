@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     fullDescription: { type: String, default: '' },
     images: [{ type: String }],
+    imagePath: { type: String }, // For AdminJS local file uploads
     rating: { type: Number, default: 0, min: 0, max: 5 },
     stock: { type: Number, default: 0, min: 0 }
   },

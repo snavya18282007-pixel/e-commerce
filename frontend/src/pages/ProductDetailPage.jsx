@@ -7,7 +7,7 @@ import ErrorState from '../components/ErrorState';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
-  const addToCart = useCartStore((state) => state.addToCart);
+  const { addToCart, items } = useCartStore();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
@@ -33,21 +33,44 @@ const ProductDetailPage = () => {
   if (error) return <ErrorState message={error} />;
   if (!product) return <ErrorState message="Product not found." />;
 
+  const cartItem = items.find((item) => item.product._id === product._id);
+  const countInCart = cartItem ? cartItem.quantity : 0;
+
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+  const getImageUrl = (product) => {
+    if (!product.imagePath) return product.images?.[0] || 'https://placehold.co/700x500?text=Product';
+    if (product.imagePath.startsWith('http')) return product.imagePath;
+    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME) {
+      return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/${product.imagePath}`;
+    }
+    return `${baseUrl}/public/uploads/${product.imagePath}`;
+  };
+
+  const mainImage = product.imagePath 
+    ? getImageUrl(product) 
+    : (product.images?.[imageIndex] || 'https://placehold.co/700x500?text=Product');
+  const allImages = product.imagePath 
+    ? [getImageUrl(product), ...(product.images || [])] 
+    : (product.images || []);
+
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       <section>
         <img
-          src={product.images?.[imageIndex] || 'https://placehold.co/700x500?text=Product'}
+          src={mainImage}
           alt={product.name}
           className="h-80 w-full rounded-lg object-cover"
         />
-        <div className="mt-3 grid grid-cols-4 gap-2">
-          {(product.images || []).map((img, index) => (
-            <button key={img + index} onClick={() => setImageIndex(index)} className="overflow-hidden rounded border border-zinc-200">
-              <img src={img} alt={`${product.name}-${index}`} className="h-16 w-full object-cover" />
-            </button>
-          ))}
-        </div>
+        {allImages.length > 1 && (
+          <div className="mt-3 grid grid-cols-4 gap-2">
+            {allImages.map((img, index) => (
+              <button key={img + index} onClick={() => setImageIndex(index)} className="overflow-hidden rounded border border-zinc-200">
+                <img src={img} alt={`${product.name}-${index}`} className="h-16 w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="rounded-lg border border-zinc-200 bg-white p-5">
@@ -83,7 +106,7 @@ const ProductDetailPage = () => {
             onClick={() => addToCart(product, quantity)}
             className="rounded-full bg-rose-600 px-12 py-3 text-sm font-bold uppercase tracking-wide text-white"
           >
-            Add to Cart
+            {countInCart > 0 ? `Add to Cart (${countInCart})` : 'Add to Cart'}
           </button>
         </div>
 

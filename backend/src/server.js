@@ -5,6 +5,8 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import http from 'http';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import { initSocket } from './config/socket.js';
 import productRoutes from './routes/productRoutes.js';
@@ -21,7 +23,11 @@ const httpServer = http.createServer(app);
 connectDB();
 
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: false,
+}));
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -33,6 +39,10 @@ app.use(
 app.use('/api/payments', express.raw({ type: 'application/json' }), paymentRoutes);
 app.use(express.json());
 app.use(morgan('dev'));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/public/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

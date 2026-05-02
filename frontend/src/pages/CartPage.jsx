@@ -6,6 +6,7 @@ const CartPage = () => {
   const { items, updateQuantity, removeItem, totalPrice } = useCartStore((state) => state);
   const navigate = useNavigate();
   const total = useMemo(() => totalPrice(), [items, totalPrice]);
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   if (!items.length) {
     return (
@@ -15,6 +16,15 @@ const CartPage = () => {
     );
   }
 
+  const getImageUrl = (product) => {
+    if (!product.imagePath) return product.images?.[0] || 'https://placehold.co/300x200?text=Product';
+    if (product.imagePath.startsWith('http')) return product.imagePath;
+    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME) {
+      return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/${product.imagePath}`;
+    }
+    return `${baseUrl}/public/uploads/${product.imagePath}`;
+  };
+
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Cart</h1>
@@ -22,7 +32,7 @@ const CartPage = () => {
         {items.map((item) => (
           <div key={item.product._id} className="flex flex-col gap-3 rounded-lg border border-zinc-200 bg-white p-4 sm:flex-row sm:items-center">
             <img
-              src={item.product.images?.[0] || 'https://placehold.co/300x200?text=Product'}
+              src={getImageUrl(item.product)}
               alt={item.product.name}
               className="h-20 w-24 rounded object-cover"
             />

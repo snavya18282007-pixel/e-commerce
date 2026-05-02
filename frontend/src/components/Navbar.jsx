@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
+import { useUserStore } from '../store/userStore';
 import keerthisLogo from '../assets/keerthis-logo-transparent.png';
 
 const categories = ['All', 'Stationaries', 'Gift Items', 'Fancy Items'];
@@ -16,12 +17,13 @@ const categoryMenu = [
 ];
 
 const Navbar = () => {
-  const cartCount = useCartStore((state) => state.cartCount);
+  const items = useCartStore((state) => state.items);
+  const { user, token, logout } = useUserStore();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const navigate = useNavigate();
 
-  const count = useMemo(() => cartCount(), [cartCount]);
+  const count = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items]);
 
   const onSearch = (event) => {
     event.preventDefault();
@@ -88,6 +90,19 @@ const Navbar = () => {
         </form>
 
         <nav className="order-3 ml-auto flex items-center gap-3 text-sm md:order-4">
+          {!token ? (
+            <Link to="/login" className="text-zinc-700 hover:text-accent font-medium mr-2">Login</Link>
+          ) : (
+            <div className="group relative">
+              <button type="button" className="text-zinc-700 hover:text-accent font-medium mr-2">
+                {user?.name?.split(' ')[0] || 'Profile'}
+              </button>
+              <div className="invisible absolute right-0 top-7 z-50 w-32 border border-zinc-200 bg-white opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
+                <Link to="/profile" className="block w-full border-b border-zinc-100 px-3 py-2 text-left text-xs text-zinc-700 hover:bg-zinc-50 hover:text-accent">Profile</Link>
+                <button onClick={() => { logout(); navigate('/'); }} className="block w-full px-3 py-2 text-left text-xs text-zinc-700 hover:bg-zinc-50 hover:text-rose-600">Logout</button>
+              </div>
+            </div>
+          )}
           <Link to="/cart" className="relative rounded-md border border-zinc-300 px-3 py-2 text-zinc-700 hover:border-accent hover:text-accent">
             Cart
             {count > 0 && (
