@@ -16,7 +16,9 @@ export class CloudinaryProvider extends BaseProvider {
   async upload(file, key) {
     try {
       if (process.env.CLOUDINARY_CLOUD_NAME) {
-         await cloudinary.uploader.upload(file.path, { public_id: key, resource_type: 'auto' });
+         const parsed = path.parse(key);
+         const publicId = parsed.dir ? `${parsed.dir}/${parsed.name}` : parsed.name;
+         await cloudinary.uploader.upload(file.path, { public_id: publicId, resource_type: 'auto' });
       } else {
          // Fallback to local if no cloudinary keys (useful for local dev before they set it up)
          const dest = path.join(process.cwd(), 'public', 'uploads', key);
