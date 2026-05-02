@@ -56,7 +56,7 @@ export const buildAdminRouter = async () => {
       }
     ],
     branding: {
-      companyName: 'Project Navi Admin'
+      companyName: "Keerthi's Store Admin"
     }
   });
 
