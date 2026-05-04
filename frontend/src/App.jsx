@@ -16,6 +16,8 @@ const OrderHistoryPage = lazy(() => import('./pages/OrderHistoryPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 function App() {
   const { token, setUser, logout } = useUserStore();
@@ -50,6 +52,8 @@ function App() {
             <Route path="/login" element={!token ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/register" element={!token ? <RegisterPage /> : <Navigate to="/" />} />
             <Route path="/profile" element={token ? <ProfilePage /> : <Navigate to="/login" />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
