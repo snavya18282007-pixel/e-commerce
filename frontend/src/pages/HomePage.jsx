@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getHomeData } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import TrustSection from '../components/TrustSection';
 import { demoProducts } from '../data/demoProducts';
@@ -28,6 +29,34 @@ const HomePage = () => {
   return (
     <div className="bg-bgPremium">
       <Hero />
+      
+      {/* Category Tiles - Direct Navigation */}
+      <section className="pt-12 md:pt-20">
+        <div className="container-premium">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+            <Link to="/products?category=Stationaries" className="relative group overflow-hidden rounded-premium aspect-[4/5] md:aspect-square bg-surface border border-borderSubtle shadow-soft transition-all hover:shadow-premium">
+              <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80" alt="Stationaries" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <span className="text-white font-black uppercase tracking-[0.2em] text-xs md:text-sm">Stationaries</span>
+              </div>
+            </Link>
+            
+            <Link to="/products?category=Gift Sets" className="relative group overflow-hidden rounded-premium aspect-[4/5] md:aspect-square bg-surface border border-borderSubtle shadow-soft transition-all hover:shadow-premium">
+              <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80" alt="Gift Sets" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <span className="text-white font-black uppercase tracking-[0.2em] text-xs md:text-sm">Gift Sets</span>
+              </div>
+            </Link>
+            
+            <Link to="/products?category=Fancy Items" className="col-span-2 md:col-span-1 relative group overflow-hidden rounded-premium aspect-video md:aspect-square bg-surface border border-borderSubtle shadow-soft transition-all hover:shadow-premium">
+              <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=800&q=80" alt="Fancy Items" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                <span className="text-white font-black uppercase tracking-[0.2em] text-xs md:text-sm">Fancy Items</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
       
       {/* Featured Collections - Minimal Separation */}
       <section className="section-premium">
