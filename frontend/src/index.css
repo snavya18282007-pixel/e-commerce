@@ -4,55 +4,51 @@
 
 @layer base {
   body {
-    @apply bg-neutral-50 text-neutral-600 antialiased font-sans;
+    @apply bg-bgPremium text-textPrimary antialiased font-sans;
     -webkit-tap-highlight-color: transparent;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   h1, h2, h3, h4 {
-    @apply text-neutral-900 font-bold tracking-tight;
+    @apply text-textPrimary font-bold tracking-tight;
   }
 }
 
 @layer components {
-  /* App-like Container */
-  .container-app {
-    @apply mx-auto w-full px-4 max-w-lg md:max-w-7xl;
+  .container-premium {
+    @apply mx-auto w-full px-5 max-w-7xl;
   }
 
-  /* Compact Mobile Spacing */
-  .section-app {
-    @apply py-8 md:py-16; /* 32px mobile / 64px desktop */
+  .section-premium {
+    @apply py-10 md:py-20;
   }
 
-  /* App Grid System */
-  .grid-app {
-    @apply grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6;
+  .btn-premium {
+    @apply flex items-center justify-center rounded-btn px-8 py-4 text-sm font-bold transition-all duration-300 active:scale-95;
   }
 
-  .btn-app {
-    @apply flex items-center justify-center rounded-xl px-6 py-4 text-sm font-bold transition-all duration-200 active:scale-95;
+  .btn-primary {
+    @apply btn-premium bg-brand text-white shadow-premium hover:bg-brandAccent hover:-translate-y-0.5;
   }
 
-  .btn-primary-app {
-    @apply btn-app bg-primary text-white shadow-lg shadow-primary/20;
+  .btn-secondary {
+    @apply btn-premium bg-surface text-textPrimary border border-borderSubtle hover:bg-bgPremium;
   }
 
-  .btn-secondary-app {
-    @apply btn-app bg-white text-neutral-800 border border-neutral-200;
+  .card-premium {
+    @apply bg-surface rounded-premium border border-borderSubtle shadow-soft transition-all duration-500 hover:shadow-premium;
   }
 
-  /* Product Card App Style */
-  .card-app {
-    @apply bg-white rounded-2xl border border-neutral-100 p-3 shadow-sm transition-transform active:scale-[0.98];
+  .text-muted {
+    @apply text-textSecondary text-xs md:text-sm font-medium;
   }
 }
 
-/* Custom Gradients */
-.bg-app-gradient {
-  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+/* Custom Utilities */
+.glass-nav {
+  @apply bg-surface/80 backdrop-blur-lg sticky top-0 z-50 border-b border-borderSubtle;
 }
 
-.text-gradient {
-  @apply bg-gradient-to-r from-primary to-indigo-400 bg-clip-text text-transparent;
+.image-edge {
+  @apply aspect-[4/5] w-full object-cover rounded-t-premium;
 }
