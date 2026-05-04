@@ -52,3 +52,12 @@
 .image-edge {
   @apply aspect-[4/5] w-full object-cover rounded-t-premium;
 }
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1.05); }
+  50% { opacity: 0.95; transform: scale(1.02); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}

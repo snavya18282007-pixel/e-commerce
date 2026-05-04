@@ -165,7 +165,6 @@ const ProductDetailPage = () => {
           </button>
         </div>
       </div>
-      </div>
 
       {/* Reviews Section */}
       <section className="container-premium mt-12 pt-12 border-t border-borderSubtle">
