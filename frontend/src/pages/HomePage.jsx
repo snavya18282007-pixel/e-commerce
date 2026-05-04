@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getHomeData } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import Hero from '../components/Hero';
+import TrustSection from '../components/TrustSection';
 import { demoProducts } from '../data/demoProducts';
 import { SectionSkeleton } from '../components/SkeletonLoader';
 
@@ -25,55 +27,71 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="space-y-10">
-      {/* Hero Section - Above the fold, render instantly */}
-      <section className="grid gap-4 rounded-lg border border-zinc-200 bg-white p-6 md:grid-cols-[1.2fr_1fr]">
-        <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-violet-700">Gift and Fancy Collection</p>
-          <h1 className="mt-2 text-3xl font-bold text-zinc-900 md:text-4xl">Thoughtful picks for every celebration.</h1>
-          <p className="mt-3 max-w-xl text-sm text-zinc-600">
-            Discover trendy stationaries, premium gift bundles, and fancy accessories curated for birthdays, weddings, and festive moments.
-          </p>
-        </div>
-        <div className="relative h-52 w-full overflow-hidden rounded-md md:h-full bg-zinc-100">
-           <img
-            src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=900&q=80&f_auto&q_auto"
-            alt="Gift items display"
-            loading="eager"
-            className="h-full w-full object-cover"
-          />
-        </div>
-      </section>
-
-      {/* Sections render with demo data immediately, then update */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">New Arrivals</h2>
-          {loading && <span className="text-xs text-zinc-400 animate-pulse">Updating...</span>}
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {newArrivals.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Best Sellers</h2>
-          {loading && <span className="text-xs text-zinc-400 animate-pulse">Updating...</span>}
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {bestSellers.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      </section>
+    <div className="pb-10">
+      <Hero />
       
-      {/* Example of where Skeletons could be used if we had more sections */}
-      {loading && !newArrivals.length && (
-        <SectionSkeleton title="Loading More..." />
-      )}
+      <div className="container-base mt-16 space-y-24">
+        {/* New Arrivals Section */}
+        <section>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-zinc-900">New Arrivals</h2>
+              <p className="mt-2 text-zinc-500">Freshly added items to our collection.</p>
+            </div>
+            {loading && (
+              <div className="flex items-center gap-2 text-xs font-medium text-accent">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                </span>
+                Updating Live...
+              </div>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {newArrivals.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        </section>
+
+        {/* Featured Banner (Optional, added for premium feel) */}
+        <section className="relative overflow-hidden rounded-3xl bg-zinc-900 px-8 py-16 text-white md:px-16 md:py-24">
+          <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-accent/20 to-transparent"></div>
+          <div className="relative z-10 max-w-xl">
+            <h2 className="text-3xl font-bold md:text-5xl">Special Hampers for Special Moments</h2>
+            <p className="mt-6 text-lg text-zinc-400">
+              Personalized gift boxes starting from Rs 499. Perfect for birthdays, anniversaries, and more.
+            </p>
+            <button className="mt-10 rounded-full bg-white px-8 py-3 text-sm font-bold text-zinc-900 transition-all hover:bg-zinc-100 active:scale-95">
+              Explore Hampers
+            </button>
+          </div>
+          <img 
+            src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80" 
+            alt="Hampers" 
+            className="absolute -right-20 top-1/2 hidden -translate-y-1/2 rounded-full border-8 border-white/10 opacity-50 lg:block lg:h-96 lg:w-96"
+          />
+        </section>
+
+        {/* Best Sellers Section */}
+        <section>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Best Sellers</h2>
+              <p className="mt-2 text-zinc-500">The most loved items by our community.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {bestSellers.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        </section>
+
+        <TrustSection />
+      </div>
     </div>
   );
 };

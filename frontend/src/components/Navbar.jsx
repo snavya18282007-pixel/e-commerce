@@ -36,82 +36,89 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur">
-      <div className="container-base flex flex-wrap items-center gap-3 py-4">
-        <Link to="/" className="inline-flex items-center">
+    <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/80 backdrop-blur-md">
+      <div className="container-base flex items-center justify-between py-3 md:py-4">
+        {/* Logo */}
+        <Link to="/" className="relative z-10 flex items-center transition-transform hover:scale-105">
           <img
             src={keerthisLogo}
             alt="keerthi's"
-            className="h-14 w-auto md:h-16"
+            className="h-10 w-auto md:h-12"
           />
         </Link>
 
-        <nav className="order-2 hidden flex-1 items-center justify-center gap-6 text-sm md:flex">
-          <Link to="/" className="text-zinc-700 hover:text-accent">Home</Link>
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-8">
+          <Link to="/" className="text-sm font-semibold text-zinc-600 transition-colors hover:text-accent">Home</Link>
           <div className="group relative">
-            <button type="button" className="text-zinc-700 hover:text-accent">
-              Category
+            <button type="button" className="flex items-center gap-1 text-sm font-semibold text-zinc-600 transition-colors hover:text-accent">
+              Categories
+              <svg className="h-4 w-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-            <div className="invisible absolute left-1/2 top-7 z-50 w-56 -translate-x-1/2 border border-zinc-200 bg-white opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
+            <div className="invisible absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 overflow-hidden rounded-2xl border border-zinc-100 bg-white p-2 opacity-0 shadow-2xl transition-all group-hover:visible group-hover:opacity-100">
               {categoryMenu.map((item) => (
                 <button
                   key={item}
                   type="button"
                   onClick={() => goToCategory(item)}
-                  className="block w-full border-b border-zinc-100 px-3 py-2 text-left text-xs text-zinc-700 last:border-b-0 hover:bg-zinc-50 hover:text-accent"
+                  className="block w-full rounded-lg px-4 py-2.5 text-left text-xs font-medium text-zinc-600 hover:bg-zinc-50 hover:text-accent transition-colors"
                 >
                   {item}
                 </button>
               ))}
             </div>
           </div>
-          <Link to="/products" className="text-zinc-700 hover:text-accent">Shop</Link>
-          <Link to="/orders" className="text-zinc-700 hover:text-accent">Orders</Link>
+          <Link to="/products" className="text-sm font-semibold text-zinc-600 transition-colors hover:text-accent">Shop</Link>
+          <Link to="/orders" className="text-sm font-semibold text-zinc-600 transition-colors hover:text-accent">Orders</Link>
         </nav>
 
-        <form onSubmit={onSearch} className="order-4 flex w-full gap-2 md:order-3 md:ml-auto md:w-auto md:min-w-[320px]">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-accent focus:outline-none"
-            placeholder="Search gift and fancy items"
-          />
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="rounded-md border border-zinc-300 px-2 py-2 text-sm focus:border-accent focus:outline-none"
-          >
-            {categories.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </form>
+        {/* Search & Actions */}
+        <div className="flex items-center gap-4">
+          <form onSubmit={onSearch} className="hidden md:flex items-center rounded-full bg-zinc-100 px-4 py-2 transition-focus-within focus-within:bg-white focus-within:ring-2 focus-within:ring-accent/20">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-transparent text-sm font-medium text-zinc-700 outline-none placeholder:text-zinc-400 w-40 lg:w-60"
+              placeholder="Search gifts..."
+            />
+            <button type="submit" className="text-zinc-400 hover:text-accent">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </form>
 
-        <nav className="order-3 ml-auto flex items-center gap-3 text-sm md:order-4">
-          {!token ? (
-            <Link to="/login" className="text-zinc-700 hover:text-accent font-medium mr-2">Login</Link>
-          ) : (
-            <div className="group relative">
-              <button type="button" className="text-zinc-700 hover:text-accent font-medium mr-2">
-                {user?.name?.split(' ')[0] || 'Profile'}
-              </button>
-              <div className="invisible absolute right-0 top-7 z-50 w-32 border border-zinc-200 bg-white opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
-                <Link to="/profile" className="block w-full border-b border-zinc-100 px-3 py-2 text-left text-xs text-zinc-700 hover:bg-zinc-50 hover:text-accent">Profile</Link>
-                <button onClick={() => { logout(); navigate('/'); }} className="block w-full px-3 py-2 text-left text-xs text-zinc-700 hover:bg-zinc-50 hover:text-rose-600">Logout</button>
+          <div className="flex items-center gap-2 md:gap-4">
+            {!token ? (
+              <Link to="/login" className="hidden sm:block text-sm font-bold text-zinc-900 hover:text-accent transition-colors">Login</Link>
+            ) : (
+              <div className="group relative">
+                <button type="button" className="flex items-center gap-1 text-sm font-bold text-zinc-900 hover:text-accent transition-colors">
+                  <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                    {user?.name?.charAt(0) || 'U'}
+                  </div>
+                </button>
+                <div className="invisible absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-2xl border border-zinc-100 bg-white p-2 opacity-0 shadow-2xl transition-all group-hover:visible group-hover:opacity-100">
+                  <Link to="/profile" className="block w-full rounded-lg px-4 py-2.5 text-left text-xs font-medium text-zinc-600 hover:bg-zinc-50 hover:text-accent">Profile</Link>
+                  <button onClick={() => { logout(); navigate('/'); }} className="block w-full rounded-lg px-4 py-2.5 text-left text-xs font-medium text-rose-500 hover:bg-rose-50">Logout</button>
+                </div>
               </div>
-            </div>
-          )}
-          <Link to="/cart" className="relative rounded-md border border-zinc-300 px-3 py-2 text-zinc-700 hover:border-accent hover:text-accent">
-            Cart
-            {count > 0 && (
-              <span className="absolute -right-2 -top-2 rounded-full bg-accent px-2 py-0.5 text-xs text-white">
-                {count}
-              </span>
             )}
-          </Link>
-        </nav>
+            
+            <Link to="/cart" className="group relative flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 transition-colors hover:bg-accent hover:text-white">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              {count > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white ring-2 ring-white">
+                  {count}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
       </div>
     </header>
   );
