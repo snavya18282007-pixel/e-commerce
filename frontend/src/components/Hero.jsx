@@ -26,7 +26,7 @@ const Hero = () => {
   }, [slides.length]);
 
   return (
-    <section className="relative h-[65vh] w-full overflow-hidden bg-black">
+    <section className="relative h-[75vh] md:h-[65vh] w-full overflow-hidden bg-black">
       {slides.map((slide, index) => (
         <div 
           key={index}
