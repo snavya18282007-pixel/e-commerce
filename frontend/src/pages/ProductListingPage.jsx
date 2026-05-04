@@ -31,7 +31,7 @@ const ProductListingPage = () => {
         setLoading(true);
         const data = await getProducts({
           page,
-          limit: 8,
+          limit: 12,
           category: category === 'All' ? undefined : category,
           sort: sortMap[sort],
           search
@@ -61,29 +61,28 @@ const ProductListingPage = () => {
     setSearchParams(next);
   };
 
-  const startItem = totalItems === 0 ? 0 : (page - 1) * 8 + 1;
-  const endItem = Math.min(page * 8, totalItems);
+  const startItem = totalItems === 0 ? 0 : (page - 1) * 12 + 1;
+  const endItem = Math.min(page * 12, totalItems);
 
   return (
-    <div className="space-y-10">
-      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between border-b border-zinc-100 pb-8">
+    <div className="container-base section-padding">
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-12">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+          <h1 className="text-[28px] md:text-[32px] font-black text-neutral-900">
             {category === 'All' ? 'All Products' : category}
           </h1>
-          <p className="mt-2 text-sm text-zinc-500">
-            Showing {startItem}-{endItem} of {totalItems} results
+          <p className="mt-2 text-sm text-neutral-500">
+            Showing {startItem}-{endItem} of {totalItems} items
           </p>
         </div>
         
         <div className="flex items-center gap-4">
-          <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">Sort By</label>
           <select 
             value={sort} 
             onChange={(e) => updateParams({ sort: e.target.value })} 
-            className="rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10"
+            className="rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-sm font-bold text-neutral-700 outline-none focus:border-primary"
           >
-            <option value="latest">Latest Arrivals</option>
+            <option value="latest">Sort: Latest</option>
             <option value="price_asc">Price: Low to High</option>
             <option value="price_desc">Price: High to Low</option>
             <option value="rating">Top Rated</option>
@@ -94,30 +93,28 @@ const ProductListingPage = () => {
       {error ? (
         <ErrorState message={error} />
       ) : (
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid-products">
           {loading ? (
             [...Array(8)].map((_, i) => <ProductSkeleton key={i} />)
           ) : products.length > 0 ? (
             products.map((product) => <ProductCard key={product._id} product={product} />)
           ) : (
             <div className="col-span-full py-20 text-center">
-              <p className="text-lg text-zinc-500 font-medium">No products found matching your criteria.</p>
-              <button onClick={() => updateParams({ category: 'All', search: '', sort: 'latest' })} className="mt-4 text-accent font-bold underline underline-offset-4">Clear all filters</button>
+              <p className="text-lg text-neutral-500 font-medium">No items found.</p>
+              <button onClick={() => updateParams({ category: 'All', search: '', sort: 'latest' })} className="mt-4 text-primary font-bold">Clear Filters</button>
             </div>
           )}
         </div>
       )}
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-3 pt-10 border-t border-zinc-100">
+        <div className="flex items-center justify-center gap-4 mt-16 pt-10 border-t border-neutral-100">
           <button 
             disabled={page <= 1} 
             onClick={() => updateParams({ page: page - 1 })} 
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-500 transition-all hover:bg-zinc-50 disabled:opacity-30 disabled:hover:bg-transparent"
+            className="h-10 w-10 flex items-center justify-center rounded-xl border border-neutral-200 text-neutral-400 disabled:opacity-30"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
+            &larr;
           </button>
           
           <div className="flex items-center gap-2">
@@ -125,7 +122,7 @@ const ProductListingPage = () => {
               <button
                 key={i + 1}
                 onClick={() => updateParams({ page: i + 1 })}
-                className={`h-10 w-10 rounded-full text-sm font-bold transition-all ${page === i + 1 ? 'bg-zinc-900 text-white' : 'text-zinc-500 hover:bg-zinc-100'}`}
+                className={`h-10 w-10 rounded-xl text-sm font-bold transition-all ${page === i + 1 ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:bg-neutral-100'}`}
               >
                 {i + 1}
               </button>
@@ -135,11 +132,9 @@ const ProductListingPage = () => {
           <button 
             disabled={page >= totalPages} 
             onClick={() => updateParams({ page: page + 1 })} 
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-500 transition-all hover:bg-zinc-50 disabled:opacity-30 disabled:hover:bg-transparent"
+            className="h-10 w-10 flex items-center justify-center rounded-xl border border-neutral-200 text-neutral-400 disabled:opacity-30"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
+            &rarr;
           </button>
         </div>
       )}

@@ -46,12 +46,12 @@ const ProductDetailPage = () => {
   }) || [mainImage];
 
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
+    <div className="container-base section-padding grid gap-10 lg:grid-cols-2 lg:items-start">
       <section>
         <img
           src={mainImage}
           alt={product.name}
-          className="h-80 w-full rounded-lg object-cover"
+          className="aspect-square w-full rounded-2xl object-cover shadow-lg"
         />
         {allImages.length > 1 && (
           <div className="mt-3 grid grid-cols-4 gap-2">
@@ -64,8 +64,8 @@ const ProductDetailPage = () => {
         )}
       </section>
 
-      <section className="rounded-lg border border-zinc-200 bg-white p-5">
-        <h1 className="text-2xl font-semibold">{product.name}</h1>
+      <section className="rounded-2xl border border-neutral-100 bg-white p-8 shadow-sm">
+        <h1 className="text-[28px] md:text-[32px] font-black text-neutral-900 leading-tight">{product.name}</h1>
         <p className="mt-2 text-xl font-bold">Rs {product.price}</p>
         <p className="mt-1 text-sm text-zinc-600">★ {product.rating}</p>
         <p className="mt-3 text-sm text-zinc-600">{product.description}</p>
@@ -95,9 +95,9 @@ const ProductDetailPage = () => {
           </div>
           <button
             onClick={() => addToCart(product, quantity)}
-            className="rounded-full bg-rose-600 px-12 py-3 text-sm font-bold uppercase tracking-wide text-white"
+            className="btn-primary flex-1 py-4"
           >
-            {countInCart > 0 ? `Add to Cart (${countInCart})` : 'Add to Cart'}
+            {countInCart > 0 ? `In Cart (${countInCart})` : 'Add to Cart'}
           </button>
         </div>
 
@@ -107,7 +107,7 @@ const ProductDetailPage = () => {
               addToCart(product, quantity);
               navigate('/checkout');
             }}
-            className="rounded-full bg-rose-600 px-12 py-3 text-sm font-bold uppercase tracking-wide text-white"
+            className="btn-secondary w-full py-4 border-neutral-200"
           >
             Buy Now
           </button>
