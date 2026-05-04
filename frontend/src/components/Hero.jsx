@@ -8,17 +8,13 @@ const Hero = () => {
   const slides = [
     {
       image: heroImg,
-      tagline: "Handcrafted Excellence",
-      title: "Rustic Elegance.",
-      description: "Experience the fusion of raw nature and refined luxury. Our curated collections are designed to tell your unique story.",
-      align: "right"
+      title: "Premium Jhumkas Collection",
+      tagline: "Elegant • Handmade • Affordable",
     },
     {
       image: heroImg1,
-      tagline: "New Collection 2026",
-      title: "Modern Minimal.",
-      description: "Discover our latest arrivals of high-end gift sets and premium stationery designed for those who appreciate the finer things.",
-      align: "left"
+      title: "Handcrafted Gift Sets",
+      tagline: "Unique • Premium • Personal",
     }
   ];
 
@@ -30,60 +26,50 @@ const Hero = () => {
   }, [slides.length]);
 
   return (
-    <section className="relative h-[85vh] min-h-[600px] w-full overflow-hidden flex items-center bg-bgPremium">
+    <section className="relative h-[65vh] w-full overflow-hidden bg-black">
       {slides.map((slide, index) => (
         <div 
           key={index}
-          className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === activeSlide ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-110 invisible'}`}
+          className={`absolute inset-0 transition-opacity duration-1000 ${index === activeSlide ? 'opacity-100' : 'opacity-0'}`}
         >
-          {/* Background Image */}
+          {/* 1. Dark Overlay (MANDATORY) */}
           <div className="absolute inset-0 z-0">
             <img 
               src={slide.image} 
               alt={slide.title} 
-              className={`h-full w-full object-cover ${slide.align === 'right' ? 'object-left' : 'object-center'}`}
+              className="h-full w-full object-cover object-right md:object-right scale-105"
             />
-            {/* Mobile Overlay */}
-            <div className="absolute inset-0 bg-bgPremium/40 md:hidden"></div>
-            {/* Desktop Gradient Overlay */}
-            <div className={`hidden md:block absolute inset-0 bg-gradient-to-r ${slide.align === 'right' ? 'from-bgPremium/40 via-bgPremium/10 to-bgPremium/90' : 'from-bgPremium/90 via-bgPremium/10 to-bgPremium/40'}`}></div>
+            <div className="absolute inset-0 bg-black/40"></div>
           </div>
           
-          <div className="container-premium relative z-10 h-full flex items-center">
-            <div className={`max-w-xl px-4 animate-fade-up ${slide.align === 'right' ? 'ml-auto text-center md:text-right' : 'mr-auto text-center md:text-left'}`}>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-brand/10 text-brand text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-                {slide.tagline}
-              </span>
-              
-              <h1 className="text-4xl md:text-7xl font-black text-textPrimary leading-[1.1] mb-8">
-                {slide.title.split(' ')[0]} <br />
-                <span className="italic text-brandAccent">{slide.title.split(' ')[1]}</span>
+          {/* 2. Hero Layout (Proper Structure) */}
+          <div className="absolute bottom-16 left-4 right-4 z-10 md:left-12 md:max-w-md animate-fade-up">
+            
+            {/* 4. Blur Glass Effect */}
+            <div className="backdrop-blur-md bg-black/30 p-6 rounded-[16px] border border-white/10 shadow-2xl">
+              <h1 className="text-2xl md:text-4xl font-black text-white leading-tight mb-1">
+                {slide.title}
               </h1>
-              
-              <p className="text-textSecondary text-base md:text-lg mb-12 leading-relaxed font-medium">
-                {slide.description}
+
+              <p className="text-sm md:text-base text-white opacity-90 mb-6 font-medium">
+                {slide.tagline}
               </p>
-              
-              <div className={`flex flex-col sm:flex-row items-center gap-4 ${slide.align === 'right' ? 'justify-center md:justify-end' : 'justify-center md:justify-start'}`}>
-                <Link to="/products" className="btn-primary w-full sm:w-auto min-w-[200px] py-4">
-                  Shop Collection
-                </Link>
-                <Link to="/products" className="btn-secondary w-full sm:w-auto min-w-[200px] py-4 backdrop-blur-md bg-white/40">
-                  Explore More
-                </Link>
-              </div>
+
+              <Link to="/products" className="block text-center w-full bg-[#7E102C] hover:bg-[#C94F4F] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-xl">
+                Shop Now
+              </Link>
             </div>
           </div>
         </div>
       ))}
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+      {/* Subtle Indicators */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {slides.map((_, i) => (
           <button 
             key={i} 
             onClick={() => setActiveSlide(i)}
-            className={`h-1.5 transition-all duration-500 rounded-full ${i === activeSlide ? 'w-8 bg-brand' : 'w-2 bg-brand/30'}`}
+            className={`h-1 transition-all duration-500 rounded-full ${i === activeSlide ? 'w-8 bg-white' : 'w-2 bg-white/30'}`}
           />
         ))}
       </div>
