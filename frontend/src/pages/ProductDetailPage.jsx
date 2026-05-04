@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getProductById } from '../services/api';
+import { getProductById, addProductReview } from '../services/api';
 import { useCartStore } from '../store/cartStore';
+import { useUserStore } from '../store/userStore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
 import { getOptimizedImageUrl } from '../utils/image';
@@ -15,6 +16,13 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+  const [reviewSuccess, setReviewSuccess] = useState('');
+
+  const { token, user } = useUserStore();
 
   useEffect(() => {
     const load = async () => {
@@ -29,6 +37,25 @@ const ProductDetailPage = () => {
     };
     load();
   }, [id]);
+
+  const submitReview = async (e) => {
+    e.preventDefault();
+    if (!token) return navigate('/login');
+    try {
+      setReviewLoading(true);
+      setReviewError('');
+      await addProductReview(id, { rating, comment });
+      setReviewSuccess('Review submitted successfully!');
+      setComment('');
+      // Reload product to show new review
+      const data = await getProductById(id);
+      setProduct(data.product);
+    } catch (err) {
+      setReviewError(err.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setReviewLoading(false);
+    }
+  };
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorState message={error} />;
@@ -138,6 +165,97 @@ const ProductDetailPage = () => {
           </button>
         </div>
       </div>
+      </div>
+
+      {/* Reviews Section */}
+      <section className="container-premium mt-12 pt-12 border-t border-borderSubtle">
+        <h2 className="text-2xl font-black text-textPrimary mb-8 text-center md:text-left">Customer Reviews</h2>
+        
+        <div className="grid gap-12 lg:grid-cols-3">
+          {/* Review List */}
+          <div className="lg:col-span-2 space-y-8">
+            {product.reviews?.length === 0 ? (
+              <div className="text-center py-12 bg-bgPremium rounded-premium border border-dashed border-borderSubtle">
+                <p className="text-textSecondary italic">No reviews yet. Be the first to share your thoughts!</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {product.reviews?.map((review) => (
+                  <div key={review._id} className="bg-surface p-6 rounded-premium border border-borderSubtle shadow-soft transition-smooth hover:shadow-md">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <span className="font-black text-textPrimary block">{review.name}</span>
+                        <div className="flex text-brandAccent mt-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg key={i} className={`h-3 w-3 ${i < review.rating ? 'fill-current' : 'text-borderSubtle fill-none stroke-current'}`} viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-textSecondary uppercase tracking-widest">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm text-textSecondary leading-relaxed">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Add Review Form */}
+          <div className="lg:col-span-1">
+            <div className="bg-surface rounded-premium p-6 border border-borderSubtle shadow-soft h-fit sticky top-24">
+              <h3 className="text-lg font-black text-textPrimary mb-4">Share Your Feedback</h3>
+              {reviewSuccess && <p className="mb-4 text-xs font-bold text-success uppercase text-center bg-success/10 py-2 rounded-lg">{reviewSuccess}</p>}
+              {reviewError && <p className="mb-4 text-xs font-bold text-brand uppercase text-center bg-brand/10 py-2 rounded-lg">{reviewError}</p>}
+              
+              {!token ? (
+                <div className="text-center py-4">
+                  <p className="text-xs text-textSecondary mb-4">Please login to write a review.</p>
+                  <button onClick={() => navigate('/login')} className="btn-secondary w-full py-3 text-xs">Login Now</button>
+                </div>
+              ) : (
+                <form onSubmit={submitReview} className="space-y-4">
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-textSecondary block mb-1">Overall Rating</label>
+                    <select 
+                      value={rating} 
+                      onChange={(e) => setRating(Number(e.target.value))}
+                      className="w-full bg-bgPremium border border-borderSubtle rounded-btn px-4 py-3 text-xs font-bold text-textPrimary outline-none focus:ring-1 focus:ring-brand"
+                    >
+                      <option value="5">5 - Excellent</option>
+                      <option value="4">4 - Very Good</option>
+                      <option value="3">3 - Average</option>
+                      <option value="2">2 - Poor</option>
+                      <option value="1">1 - Terrible</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-textSecondary block mb-1">Your Comment</label>
+                    <textarea 
+                      rows="4"
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="What did you like or dislike about this product?"
+                      className="w-full bg-bgPremium border border-borderSubtle rounded-btn px-4 py-3 text-xs font-bold text-textPrimary outline-none focus:ring-1 focus:ring-brand placeholder:text-textSecondary/30"
+                      required
+                    ></textarea>
+                  </div>
+                  <button 
+                    type="submit" 
+                    disabled={reviewLoading}
+                    className="btn-primary w-full py-4 shadow-lg shadow-brand/20"
+                  >
+                    {reviewLoading ? 'Submitting...' : 'Submit Review'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
