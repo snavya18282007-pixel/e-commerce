@@ -4,6 +4,7 @@ import { getProductById } from '../services/api';
 import { useCartStore } from '../store/cartStore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
+import { getOptimizedImageUrl } from '../utils/image';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -38,21 +39,11 @@ const ProductDetailPage = () => {
 
   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-  const getImageUrl = (product) => {
-    if (!product.imagePath) return product.images?.[0] || 'https://placehold.co/700x500?text=Product';
-    if (product.imagePath.startsWith('http')) return product.imagePath;
-    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME) {
-      return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/${product.imagePath}`;
-    }
-    return `${baseUrl}/public/uploads/${product.imagePath}`;
-  };
-
-  const mainImage = product.imagePath 
-    ? getImageUrl(product) 
-    : (product.images?.[imageIndex] || 'https://placehold.co/700x500?text=Product');
-  const allImages = product.imagePath 
-    ? [getImageUrl(product), ...(product.images || [])] 
-    : (product.images || []);
+  const mainImage = getOptimizedImageUrl(product, { width: 800 });
+  const allImages = product.images?.map(img => {
+      if (typeof img === 'string' && img.startsWith('http')) return img;
+      return getOptimizedImageUrl({ ...product, imagePath: img });
+  }) || [mainImage];
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
@@ -66,7 +57,7 @@ const ProductDetailPage = () => {
           <div className="mt-3 grid grid-cols-4 gap-2">
             {allImages.map((img, index) => (
               <button key={img + index} onClick={() => setImageIndex(index)} className="overflow-hidden rounded border border-zinc-200">
-                <img src={img} alt={`${product.name}-${index}`} className="h-16 w-full object-cover" />
+                <img src={img} alt={`${product.name}-${index}`} loading="lazy" className="h-16 w-full object-cover" />
               </button>
             ))}
           </div>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
+import { getOptimizedImageUrl } from '../utils/image';
 
 const ProductCard = ({ product }) => {
   const { addToCart, updateQuantity, removeItem, items } = useCartStore();
@@ -7,16 +8,7 @@ const ProductCard = ({ product }) => {
   const countInCart = cartItem ? cartItem.quantity : 0;
   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   
-  const getImageUrl = (product) => {
-    if (!product.imagePath) return product.images?.[0] || 'https://placehold.co/600x750?text=Gift+Item';
-    if (product.imagePath.startsWith('http')) return product.imagePath;
-    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME) {
-      return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/${product.imagePath}`;
-    }
-    return `${baseUrl}/public/uploads/${product.imagePath}`;
-  };
-
-  const displayImage = getImageUrl(product);
+  const displayImage = getOptimizedImageUrl(product);
 
   const handleDecrease = () => {
     if (countInCart === 1) {
@@ -36,6 +28,7 @@ const ProductCard = ({ product }) => {
         <img
           src={displayImage}
           alt={product.name}
+          loading="lazy"
           className="h-72 w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>

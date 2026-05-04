@@ -74,3 +74,21 @@ export const deleteProduct = async (req, res, next) => {
     return next(error);
   }
 };
+export const getHomeData = async (req, res, next) => {
+  try {
+    const [newArrivals, bestSellers, categories] = await Promise.all([
+      Product.find().sort('-createdAt').limit(4),
+      Product.find().sort('-rating').limit(4),
+      // Assuming Category model is imported or we can just get distinct categories from Product
+      Product.distinct('category')
+    ]);
+
+    res.status(200).json({
+      newArrivals,
+      bestSellers,
+      categories
+    });
+  } catch (error) {
+    next(error);
+  }
+};

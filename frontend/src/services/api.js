@@ -12,6 +12,38 @@ api.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
+// Cache for 60 seconds
+const CACHE_DURATION = 60 * 1000;
+let homeDataCache = null;
+let lastFetchTime = 0;
+
+const fetchWithTimeout = async (promise, timeout = 5000) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timed out')), timeout)
+    )
+  ]);
+};
+
+export const getHomeData = async () => {
+  const now = Date.now();
+  if (homeDataCache && (now - lastFetchTime < CACHE_DURATION)) {
+    return homeDataCache;
+  }
+
+  try {
+    const { data } = await fetchWithTimeout(api.get('/products/homeData'));
+    homeDataCache = data;
+    lastFetchTime = now;
+    return data;
+  } catch (error) {
+    // If it's a timeout or error, we might want to return the cache anyway if it exists
+    if (homeDataCache) return homeDataCache;
+    throw error;
+  }
+};
+
 export const getProducts = async (params = {}) => {
   const { data } = await api.get('/products', { params });
   return data;
