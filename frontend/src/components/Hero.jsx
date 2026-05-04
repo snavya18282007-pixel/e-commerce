@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import heroImg from '../assets/hero-jewelry.jpg.jpeg';
+import heroImg from '../assets/hero.png';
 
 const Hero = () => {
   return (
@@ -8,8 +8,8 @@ const Hero = () => {
       <div className="absolute inset-0 z-0">
         <img 
           src={heroImg} 
-          alt="Premium Jewelry" 
-          className="h-full w-full object-cover object-left md:object-center scale-110 animate-pulse-slow"
+          alt="Premium Gifting" 
+          className="h-full w-full object-cover object-center scale-105 animate-pulse-slow"
         />
         {/* Stronger overlay on mobile to ensure text readability */}
         <div className="absolute inset-0 bg-bgPremium/40 md:hidden"></div>
@@ -35,7 +35,7 @@ const Hero = () => {
             <Link to="/products" className="btn-primary w-full sm:w-auto min-w-[200px] py-4">
               Shop Collection
             </Link>
-            <Link to="/products" className="btn-secondary w-full sm:w-auto min-w-[200px] py-4 backdrop-blur-md bg-white/40">
+            <Link to="/about" className="btn-secondary w-full sm:w-auto min-w-[200px] py-4 backdrop-blur-md bg-white/40">
               Our Story
             </Link>
           </div>
