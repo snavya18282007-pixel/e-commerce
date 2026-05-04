@@ -4,53 +4,55 @@
 
 @layer base {
   body {
-    @apply bg-neutral-50 text-neutral-500 antialiased font-sans;
-    line-height: 1.6;
-    min-height: 100vh;
+    @apply bg-neutral-50 text-neutral-600 antialiased font-sans;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply text-neutral-900 font-bold tracking-tight leading-tight;
+  h1, h2, h3, h4 {
+    @apply text-neutral-900 font-bold tracking-tight;
   }
-
-  h1 { @apply text-[32px] md:text-[36px]; }
-  h2 { @apply text-[24px] md:text-[28px]; }
-  
-  p { @apply text-sm md:text-base; }
 }
 
 @layer components {
-  .container-base {
-    @apply mx-auto w-full max-w-[1200px] px-4 md:px-6;
+  /* App-like Container */
+  .container-app {
+    @apply mx-auto w-full px-4 max-w-lg md:max-w-7xl;
   }
 
-  .section-padding {
-    @apply py-14; /* 56px */
+  /* Compact Mobile Spacing */
+  .section-app {
+    @apply py-8 md:py-16; /* 32px mobile / 64px desktop */
   }
 
-  .grid-products {
-    @apply grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6;
+  /* App Grid System */
+  .grid-app {
+    @apply grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6;
   }
 
-  .btn {
-    @apply inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  .btn-app {
+    @apply flex items-center justify-center rounded-xl px-6 py-4 text-sm font-bold transition-all duration-200 active:scale-95;
   }
 
-  .btn-primary {
-    @apply btn bg-primary text-white hover:bg-primaryDark hover:shadow-lg hover:shadow-primary/25;
+  .btn-primary-app {
+    @apply btn-app bg-primary text-white shadow-lg shadow-primary/20;
   }
 
-  .btn-secondary {
-    @apply btn bg-white text-neutral-700 border border-neutral-200 hover:bg-neutral-50;
+  .btn-secondary-app {
+    @apply btn-app bg-white text-neutral-800 border border-neutral-200;
   }
 
-  .card-premium {
-    @apply overflow-hidden rounded-xl bg-white border border-neutral-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex flex-col h-full;
+  /* Product Card App Style */
+  .card-app {
+    @apply bg-white rounded-2xl border border-neutral-100 p-3 shadow-sm transition-transform active:scale-[0.98];
   }
 }
 
-/* Fix for equal height grid items */
-.grid-products > * {
-  display: flex;
-  flex-direction: column;
+/* Custom Gradients */
+.bg-app-gradient {
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+}
+
+.text-gradient {
+  @apply bg-gradient-to-r from-primary to-indigo-400 bg-clip-text text-transparent;
 }
