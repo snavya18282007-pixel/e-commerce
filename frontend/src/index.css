@@ -4,24 +4,49 @@
 
 @layer base {
   body {
-    @apply bg-zinc-50 text-zinc-900 antialiased;
-    background-image: radial-gradient(circle at top right, #f5f3ff 0%, #f8fafc 45%, #fafafa 100%);
+    @apply bg-neutral-50 text-neutral-500 antialiased font-sans;
+    background-image: radial-gradient(circle at top right, #f5f3ff 0%, #f9fafb 45%, #f9fafb 100%);
     min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-neutral-900 font-bold tracking-tight;
+  }
+
+  h1 { @apply text-4xl md:text-5xl; }
+  h2 { @apply text-2xl md:text-3xl; }
+}
+
+@layer components {
+  .container-base {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primaryDark hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply btn bg-white text-neutral-700 border border-neutral-200 hover:bg-neutral-50 hover:border-neutral-300;
+  }
+
+  .card-premium {
+    @apply overflow-hidden rounded-xl bg-white border border-neutral-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-neutral-200/50 hover:scale-[1.03];
+  }
+
+  .section-padding {
+    @apply py-section;
   }
 }
 
-.container-base {
-  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
-}
-
-.text-gradient {
-  @apply bg-gradient-to-r from-accent to-accentSoft bg-clip-text text-transparent;
-}
-
-.btn-primary {
-  @apply rounded-full bg-accent px-8 py-3 text-sm font-semibold text-white transition-all hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20 active:scale-95;
-}
-
-.card-premium {
-  @apply overflow-hidden rounded-2xl bg-white border border-zinc-100 shadow-sm transition-all hover:shadow-xl hover:shadow-zinc-200/50 hover:-translate-y-1;
+.transition-smooth {
+  @apply transition-all duration-300 ease-in-out;
 }
